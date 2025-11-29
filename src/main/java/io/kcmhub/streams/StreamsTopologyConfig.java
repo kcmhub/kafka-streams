@@ -23,15 +23,11 @@ public class StreamsTopologyConfig {
 
     private final String outputTopic;
 
-    private final UppercaseTopologyBuilder uppercaseTopologyBuilder;
-
     @Autowired
     public StreamsTopologyConfig(@Value("${app.kafka.input-topic}") String inputTopic,
-                                 @Value("${app.kafka.output-topic}") String outputTopic,
-                                 UppercaseTopologyBuilder uppercaseTopologyBuilder) {
+                                 @Value("${app.kafka.output-topic}") String outputTopic) {
         this.inputTopic = inputTopic;
         this.outputTopic = outputTopic;
-        this.uppercaseTopologyBuilder = uppercaseTopologyBuilder;
     }
 
     /**
@@ -73,7 +69,8 @@ public class StreamsTopologyConfig {
      * @return a configured {@link StreamsBuilderFactoryBean} instance
      */
     @Bean
-    public StreamsBuilderFactoryBean streamsBuilderFactoryBean(KafkaStreamsConfiguration kafkaStreamsConfiguration) {
+    public StreamsBuilderFactoryBean streamsBuilderFactoryBean(KafkaStreamsConfiguration kafkaStreamsConfiguration,
+                                                               UppercaseTopologyBuilder uppercaseTopologyBuilder) {
         StreamsBuilderFactoryBean factoryBean = new StreamsBuilderFactoryBean(kafkaStreamsConfiguration);
         factoryBean.setInfrastructureCustomizer(new KafkaStreamsInfrastructureCustomizer() {
             @Override
