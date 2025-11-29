@@ -121,3 +121,20 @@ To use this repository as a template for your own Kafka Streams service:
 ## License and contributions
 This project is licensed under the Apache License 2.0. See the [`LICENSE`](LICENSE) file for details.
 Contributions are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines on how to propose changes.
+## Working with Kafka using KCM
+You can use [KCM](https://github.com/kcmhub/KCM) to interact with your Kafka cluster and topics while developing with this template.
+KCM provides a simple CLI to:
+- List topics
+- Create or delete topics
+- Produce messages to a topic
+- Consume messages from a topic
+This is particularly useful to send test messages to the input topic and inspect the output topic used by this Kafka Streams application.
+Basic workflow with KCM:
+1. Install and configure KCM following the instructions in the KCM repository:  
+   https://github.com/kcmhub/KCM
+2. Use KCM to create or inspect the topics configured in `application.yml`:
+   - Input topic: `app.kafka.input-topic` (default `input-topic`)
+   - Output topic: `app.kafka.output-topic` (default `output-topic`)
+3. Use KCM commands to:
+   - Produce messages to the input topic (for example JSON or plain text)
+   - Consume messages from the output topic to verify that your topology processes records as expected
