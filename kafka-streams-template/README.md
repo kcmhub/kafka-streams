@@ -114,9 +114,38 @@ java -jar target/kafka-streams-template-1.0-SNAPSHOT.jar
 ## Working with Kafka using KCM
 You can use [KCM](https://github.com/kcmhub/KCM) to interact with your Kafka cluster and topics while developing with this template.
 
+## Topology REST API
+
+This template exposes REST endpoints to inspect the Kafka Streams topology at runtime:
+
+### Available endpoints
+
+- `GET /api/topology/description` - Get topology description as JSON
+- `GET /api/topology/description/text` - Get topology description as plain text
+- `GET /api/topology/state` - Get current Kafka Streams state
+
+### Quick test
+
+```bash
+# Get topology description
+curl http://localhost:8080/api/topology/description | jq
+
+# Get topology as text
+curl http://localhost:8080/api/topology/description/text
+
+# Get streams state
+curl http://localhost:8080/api/topology/state | jq
+```
+
+For complete documentation, see [TOPOLOGY_API.md](TOPOLOGY_API.md).
+
+---
+
 ## Metrics and Monitoring
 
-This template includes **automatic Kafka Streams metrics** via Micrometer and Prometheus:
+This template includes **Kafka Streams metrics** via Micrometer and Prometheus:
+
+⚠️ **Important**: Kafka Streams metrics require manual configuration in Spring Boot 3.3.x. This template includes the required `KafkaStreamsMetricsConfig.java` configuration.
 
 ### Access metrics endpoint
 ```bash
@@ -135,14 +164,26 @@ curl http://localhost:8080/actuator/prometheus | grep kafka_stream
 
 ### Configuration
 
-Metrics are **automatically configured** by Spring Boot when you have:
+This template includes **manual configuration** (`KafkaStreamsMetricsConfig.java`) to bind Kafka Streams metrics to Micrometer.
+
+**Required dependencies** (already included):
 - ✅ `spring-boot-starter-actuator`
 - ✅ `micrometer-registry-prometheus`
 - ✅ `spring-kafka`
 
-**No manual configuration needed!** The `KafkaStreamsMicrometerListener` is automatically registered.
+**Manual configuration** (`src/main/java/io/kcmhub/config/KafkaStreamsMetricsConfig.java`):
+- Binds Kafka Streams JMX metrics to Micrometer
+- Adds application tags for better metric organization
+- Manages metric lifecycle (registration and cleanup)
 
 For detailed information, see [METRICS.md](METRICS.md).
+
+### Troubleshooting
+
+If you don't see `kafka_stream_*` metrics, see:
+- [SOLUTION_METRIQUES.md](SOLUTION_METRIQUES.md) - Quick fix guide
+- [TROUBLESHOOTING_METRICS.md](TROUBLESHOOTING_METRICS.md) - Detailed troubleshooting
+- [TEST_FINAL.md](TEST_FINAL.md) - Testing guide
 
 ## Extending this template
 To use this module as a template for your own Kafka Streams service:

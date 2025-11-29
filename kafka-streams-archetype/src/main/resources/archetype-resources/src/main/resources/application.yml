@@ -1,0 +1,65 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: kafka-streams-skeleton
+  kafka:
+    bootstrap-servers: localhost:9092
+    streams:
+      application-id: kafka-streams-skeleton
+      replication-factor: 1
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      instance: ${METRICS_INSTANCE_ID:local}
+    web:
+      server:
+        max-uri-tags: ${METRICS_MAX_SERVER_URI_TAGS:100}
+      client:
+        max-uri-tags: ${METRICS_MAX_CLIENT_URI_TAGS:100}
+    data:
+      repository:
+        metric-name: spring.data.repository.invocations
+        autotime:
+          enabled: true
+          percentiles: 0.5,0.95,0.99
+    system:
+      diskspace:
+        paths:
+          - "${MANAGEMENT_DISK_PATH:.}"
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        kafka.streams: true
+      percentiles:
+        http.server.requests: 0.5,0.95,0.99
+      slo:
+        http.server.requests: 500ms,1s
+      expiry:
+        all: 2m
+      buffer-length:
+        all: 3
+    enable:
+      all: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    prometheus:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    org.apache.kafka: INFO
+
+app:
+  kafka:
+    input-topic: ${APP_KAFKA_INPUT_TOPIC:input-topic}
+    output-topic: ${APP_KAFKA_OUTPUT_TOPIC:output-topic}
