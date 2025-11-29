@@ -1,4 +1,4 @@
-package io.kcmhub.streams;
+package ${package}.streams;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -63,21 +63,22 @@ public class StreamsTopologyConfig {
     }
 
     /**
-     * StreamsBuilderFactoryBean that uses UppercaseTopologyBuilder to configure the topology.
+     * StreamsBuilderFactoryBean that uses ${topologyBuilderClass} to configure the topology.
      *
      * @param kafkaStreamsConfiguration the Kafka Streams configuration
      * @return a configured {@link StreamsBuilderFactoryBean} instance
      */
     @Bean
     public StreamsBuilderFactoryBean streamsBuilderFactoryBean(KafkaStreamsConfiguration kafkaStreamsConfiguration,
-                                                               UppercaseTopologyBuilder uppercaseTopologyBuilder) {
+                                                               ${topologyBuilderClass} topologyBuilder) {
         StreamsBuilderFactoryBean factoryBean = new StreamsBuilderFactoryBean(kafkaStreamsConfiguration);
         factoryBean.setInfrastructureCustomizer(new KafkaStreamsInfrastructureCustomizer() {
             @Override
             public void configureBuilder(StreamsBuilder builder) {
-                uppercaseTopologyBuilder.configure(builder, inputTopic, outputTopic);
+                topologyBuilder.configure(builder, inputTopic, outputTopic);
             }
         });
         return factoryBean;
     }
 }
+

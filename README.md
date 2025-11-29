@@ -1,8 +1,35 @@
-# Kafka Streams Skeleton (Spring Boot Template)
-This repository is a reusable starter template for building Kafka Streams applications with Spring Boot and Java 21.
-It provides a minimal, production-oriented setup with a sample topology, metrics, and externalized configuration
-through Spring Boot properties and environment variables.
-## Features
+# Kafka Streams Skeleton (Multi-Module Project)
+
+This is a multi-module Maven project providing tools and templates for building Kafka Streams applications with Spring Boot and Java 21.
+
+## Project Structure
+
+This project consists of:
+
+### Maven Modules
+1. **kafka-streams-template** - A reusable Spring Boot template for building Kafka Streams applications with a sample topology, metrics, and externalized configuration
+2. **kafka-streams-archetype** - Maven archetype for quickly generating new Kafka Streams projects based on the template
+
+### Tooling Folder (Not a Maven Module)
+3. **kafka-broker-tooling** - Docker Compose stack and scripts for running a local Kafka development environment with KCM (Kafka Cluster Manager), PostgreSQL, and Redis. This is NOT a Maven module - it contains only Docker Compose files and helper scripts.
+
+## Building the Project
+
+To build all modules:
+```bash
+mvn clean install
+```
+
+To build a specific module:
+```bash
+cd kafka-streams-template
+mvn clean install
+```
+---
+
+## Module 1: kafka-streams-template
+
+### Features
 - Spring Boot 3.3 (via `spring-boot-starter-parent`)
 - Java 21
 - Kafka Streams 3.9 integrated through Spring Kafka
@@ -10,13 +37,13 @@ through Spring Boot properties and environment variables.
 - Centralized Kafka Streams configuration
 - Application metrics via Spring Boot Actuator and Micrometer Prometheus
 - Configuration overridden via environment variables (suitable for containers and cloud platforms)
-## Project structure
-- `pom.xml` – Maven configuration and dependencies
-- `src/main/java/io/kcmhub/KafkaStreamsApplication.java` – Spring Boot entry point
-- `src/main/java/io/kcmhub/streams/StreamsTopologyConfig.java` – Kafka Streams configuration and topology wiring
-- `src/main/java/io/kcmhub/streams/UppercaseTopologyBuilder.java` – example stream processing topology
-- `src/main/java/io/kcmhub/streams/KafkaStreamsStarter.java` – lifecycle management for the Kafka Streams instance
-- `src/main/resources/application.yml` – default Spring Boot and application configuration
+### Module structure
+- `kafka-streams-template/pom.xml` – Maven configuration and dependencies
+- `kafka-streams-template/src/main/java/io/kcmhub/KafkaStreamsApplication.java` – Spring Boot entry point
+- `kafka-streams-template/src/main/java/io/kcmhub/streams/StreamsTopologyConfig.java` – Kafka Streams configuration and topology wiring
+- `kafka-streams-template/src/main/java/io/kcmhub/streams/UppercaseTopologyBuilder.java` – example stream processing topology
+- `kafka-streams-template/src/main/java/io/kcmhub/streams/KafkaStreamsStarter.java` – lifecycle management for the Kafka Streams instance
+- `kafka-streams-template/src/main/resources/application.yml` – default Spring Boot and application configuration
 ## Prerequisites
 - Java 21 (JDK 21) installed  
   - Verify with:
@@ -166,6 +193,93 @@ To use this repository as a template for your own Kafka Streams service:
 3. Update the application name and Kafka Streams configuration in `application.yml`.
 4. Create your own topology classes under `io.kcmhub.streams` (or another package) and wire them in `StreamsTopologyConfig`.
 5. Add or adjust configuration properties and override them via environment variables following the pattern described above.
+---
+
+## Tooling Folder: kafka-broker-tooling
+
+This is a **tooling folder** (NOT a Maven module) that provides a complete Docker Compose setup for local Kafka development.
+
+⚠️ **Important**: This folder contains NO Java code and NO `pom.xml` - it's purely for infrastructure setup.
+
+### What's Included
+- **Docker Compose stack** with:
+  - Kafka Broker (port 9092) - KRaft mode (no Zookeeper required)
+  - **KCM UI** - Web interface for Kafka management (http://localhost:3000)
+  - **KCM API** - Backend for Kafka management (http://localhost:8080)
+  - PostgreSQL (port 5432) - Database for KCM
+  - Redis (port 6379) - Cache for KCM
+- **Helper scripts**:
+  - `docker.ps1` - PowerShell script for Windows
+  - `Makefile` - Make commands for Linux/macOS
+  - `DOCKER.md` - Detailed documentation
+
+### Quick Start
+
+#### Windows (PowerShell)
+```powershell
+cd kafka-broker-tooling
+.\docker.ps1 up
+```
+
+#### Linux/macOS
+```bash
+cd kafka-broker-tooling
+make up
+# or
+docker compose up -d
+```
+
+### Using KCM (Kafka Cluster Manager)
+
+**KCM** is a powerful web UI for managing Kafka clusters, included in this tooling stack.
+
+🔗 **GitHub**: [kcmhub/KCM](https://github.com/kcmhub/KCM.git)
+
+#### Features
+- Create, view, and manage topics
+- Produce and consume messages
+- Monitor consumer groups and lag
+- View broker and partition information
+
+#### Access
+1. Start the environment (see Quick Start above)
+2. Open http://localhost:3000 in your browser
+3. The Kafka cluster connection is pre-configured
+
+### Documentation
+
+See `kafka-broker-tooling/README.md` and `kafka-broker-tooling/DOCKER.md` for complete documentation.
+
+---
+
+## Module 2: kafka-streams-archetype
+
+Maven archetype for quickly generating new Kafka Streams projects.
+
+### Usage
+
+First, install the archetype locally:
+```bash
+cd kafka-streams-archetype
+mvn clean install
+```
+
+Then generate a new project from the archetype:
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.kcmhub \
+  -DarchetypeArtifactId=kafka-streams-archetype \
+  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DgroupId=com.example \
+  -DartifactId=my-kafka-streams-app \
+  -Dversion=1.0-SNAPSHOT \
+  -Dpackage=com.example.streams
+```
+
+This will create a new Kafka Streams project based on the template with your specified group, artifact, and package names.
+
+---
+
 ## License and contributions
 This project is licensed under the Apache License 2.0. See the [`LICENSE`](LICENSE) file for details.
 Contributions are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines on how to propose changes.

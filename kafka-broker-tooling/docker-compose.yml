@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+  # Kafka Broker (KRaft mode - no Zookeeper required)
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    hostname: kafka
+    container_name: kafka-tooling-broker
+    ports:
+      - "9092:9092"
+      - "9101:9101"
+    environment:
+      # KRaft mode configuration
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+
+      # Listeners configuration
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://0.0.0.0:9092,CONTROLLER://kafka:29093'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+
+      # Cluster configuration
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+
+      # Topic defaults
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+
+      # JMX configuration
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+
+      # Log configuration
+      KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+    volumes:
+      - kafka-data:/tmp/kraft-combined-logs
+    networks:
+      - kafka-tooling-network
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # PostgreSQL - Database for KCM
+  postgres:
+    image: postgres:15-alpine
+    hostname: postgres
+    container_name: kafka-tooling-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: kcm
+      POSTGRES_USER: kcm_user
+      POSTGRES_PASSWORD: kcm_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - kafka-tooling-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kcm_user -d kcm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis - Cache for KCM
+  redis:
+    image: redis:7-alpine
+    hostname: redis
+    container_name: kafka-tooling-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - kafka-tooling-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # KCM API - Backend
+  kcm-api:
+    image: kcmhub/kcm-api:latest
+    hostname: kcm-api
+    container_name: kafka-tooling-kcm-api
+    depends_on:
+      - kafka
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
+    environment:
+      # Kafka Configuration
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+      # Database Configuration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/kcm
+      SPRING_DATASOURCE_USERNAME: kcm_user
+      SPRING_DATASOURCE_PASSWORD: kcm_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      # Redis Configuration
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+
+      # API Configuration
+      SERVER_PORT: 8080
+      LOGGING_LEVEL_IO_KCMHUB: DEBUG
+    networks:
+      - kafka-tooling-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # KCM UI - Frontend
+  kcm-ui:
+    image: kcmhub/kcm-ui:latest
+    hostname: kcm-ui
+    container_name: kafka-tooling-kcm-ui
+    depends_on:
+      - kcm-api
+    ports:
+      - "3000:80"
+    environment:
+      REACT_APP_API_URL: http://localhost:8080
+      REACT_APP_API_BASE_PATH: /api
+    networks:
+      - kafka-tooling-network
+
+networks:
+  kafka-tooling-network:
+    driver: bridge
+
+volumes:
+  kafka-data:
+    driver: local
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+

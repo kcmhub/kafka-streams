@@ -1,4 +1,4 @@
-﻿# Contributing to Kafka Streams Skeleton
+# Contributing to Kafka Streams Skeleton
 Thank you for considering contributing to this Kafka Streams template.
 Contributions of all kinds are welcome: bug fixes, documentation, examples, and small features.
 ## Ways to contribute

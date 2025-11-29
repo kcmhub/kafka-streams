@@ -1,4 +1,4 @@
-package io.kcmhub;
+package ${package};
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,3 +10,4 @@ public class KafkaStreamsApplication {
         SpringApplication.run(KafkaStreamsApplication.class, args);
     }
 }
+
