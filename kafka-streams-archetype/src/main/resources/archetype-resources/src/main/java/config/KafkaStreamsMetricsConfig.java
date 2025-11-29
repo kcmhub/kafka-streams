@@ -33,7 +33,7 @@ public class KafkaStreamsMetricsConfig {
 
     public KafkaStreamsMetricsConfig(StreamsBuilderFactoryBean factoryBean,
                                      MeterRegistry meterRegistry,
-                                     @Value("${spring.application.name:kafka-streams-app}") String applicationName) {
+                                     @Value("$" + "{spring.application.name:kafka-streams-app}") String applicationName) {
 
         factoryBean.addListener(new StreamsBuilderFactoryBean.Listener() {
             @Override

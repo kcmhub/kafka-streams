@@ -15,7 +15,6 @@ public class ${topologyBuilderClass} {
         KStream<String, String> stream = streamsBuilder.stream(inputTopic);
 
         stream.peek((key, value) -> LOGGER.debug("Processing record key={} value={}", key, value))
-                .mapValues(value -> value == null ? null : value.toUpperCase())
                 .to(outputTopic);
 
         LOGGER.info("Topology configured using input topic '{}' and output topic '{}'", inputTopic, outputTopic);

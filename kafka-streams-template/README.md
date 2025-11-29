@@ -176,14 +176,6 @@ This template includes **manual configuration** (`KafkaStreamsMetricsConfig.java
 - Adds application tags for better metric organization
 - Manages metric lifecycle (registration and cleanup)
 
-For detailed information, see [METRICS.md](METRICS.md).
-
-### Troubleshooting
-
-If you don't see `kafka_stream_*` metrics, see:
-- [SOLUTION_METRIQUES.md](SOLUTION_METRIQUES.md) - Quick fix guide
-- [TROUBLESHOOTING_METRICS.md](TROUBLESHOOTING_METRICS.md) - Detailed troubleshooting
-- [TEST_FINAL.md](TEST_FINAL.md) - Testing guide
 
 ## Extending this template
 To use this module as a template for your own Kafka Streams service:

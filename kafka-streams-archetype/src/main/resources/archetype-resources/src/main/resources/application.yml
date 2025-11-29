@@ -1,5 +1,6 @@
+#set( $symbol_dollar = '$' )
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${symbol_dollar}{SERVER_PORT:8080}
 
 spring:
   application:
@@ -13,13 +14,13 @@ spring:
 management:
   metrics:
     tags:
-      application: ${spring.application.name}
-      instance: ${METRICS_INSTANCE_ID:local}
+      application: ${symbol_dollar}{spring.application.name}
+      instance: ${symbol_dollar}{METRICS_INSTANCE_ID:local}
     web:
       server:
-        max-uri-tags: ${METRICS_MAX_SERVER_URI_TAGS:100}
+        max-uri-tags: ${symbol_dollar}{METRICS_MAX_SERVER_URI_TAGS:100}
       client:
-        max-uri-tags: ${METRICS_MAX_CLIENT_URI_TAGS:100}
+        max-uri-tags: ${symbol_dollar}{METRICS_MAX_CLIENT_URI_TAGS:100}
     data:
       repository:
         metric-name: spring.data.repository.invocations
@@ -29,7 +30,7 @@ management:
     system:
       diskspace:
         paths:
-          - "${MANAGEMENT_DISK_PATH:.}"
+          - "${symbol_dollar}{MANAGEMENT_DISK_PATH:.}"
     distribution:
       percentiles-histogram:
         http.server.requests: true
@@ -61,5 +62,5 @@ logging:
 
 app:
   kafka:
-    input-topic: ${APP_KAFKA_INPUT_TOPIC:input-topic}
-    output-topic: ${APP_KAFKA_OUTPUT_TOPIC:output-topic}
+    input-topic: ${symbol_dollar}{APP_KAFKA_INPUT_TOPIC:input-topic}
+    output-topic: ${symbol_dollar}{APP_KAFKA_OUTPUT_TOPIC:output-topic}
