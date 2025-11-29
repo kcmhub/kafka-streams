@@ -61,25 +61,56 @@ Some common mappings in this project:
 - `spring.kafka.streams.application-id` ? `SPRING_KAFKA_STREAMS_APPLICATION_ID`
 - `app.kafka.input-topic` ? `APP_KAFKA_INPUT_TOPIC`
 - `app.kafka.output-topic` ? `APP_KAFKA_OUTPUT_TOPIC`
-#### Examples (PowerShell on Windows)
+#### Examples
+
+##### Windows (PowerShell)
 Open a PowerShell in the project directory and set environment variables before starting the app.
+
 Override Kafka bootstrap servers:
 ```powershell
 $env:SPRING_KAFKA_BOOTSTRAP_SERVERS = "broker1:9092,broker2:9092"
 ```
+
 Override the Kafka Streams application id:
 ```powershell
 $env:SPRING_KAFKA_STREAMS_APPLICATION_ID = "my-streams-service"
 ```
+
 Override input/output topics:
 ```powershell
 $env:APP_KAFKA_INPUT_TOPIC  = "orders-input"
 $env:APP_KAFKA_OUTPUT_TOPIC = "orders-output"
 ```
+
 Then run the application using Maven:
 ```powershell
 mvn spring-boot:run
 ```
+
+##### Linux/macOS (Bash)
+Open a terminal in the project directory and set environment variables before starting the app.
+
+Override Kafka bootstrap servers:
+```bash
+export SPRING_KAFKA_BOOTSTRAP_SERVERS="broker1:9092,broker2:9092"
+```
+
+Override the Kafka Streams application id:
+```bash
+export SPRING_KAFKA_STREAMS_APPLICATION_ID="my-streams-service"
+```
+
+Override input/output topics:
+```bash
+export APP_KAFKA_INPUT_TOPIC="orders-input"
+export APP_KAFKA_OUTPUT_TOPIC="orders-output"
+```
+
+Then run the application using Maven:
+```bash
+mvn spring-boot:run
+```
+
 All of the above environment variables will override the values from `application.yml`.
 > Note: Any property defined in `application.yml` can be overridden in the same way:  
 > `some.property.path` → `SOME_PROPERTY_PATH`.
