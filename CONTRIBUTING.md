@@ -32,6 +32,9 @@ Requirements:
 - Java 21 (JDK 21)
 - Maven 3.x
 - Access to a Kafka broker for running the application or integration tests
+
+You can use [KCM](https://github.com/kcmhub/KCM) to interact with Kafka topics during development (see the main [README.md](README.md) for details).
+
 Useful Maven commands:
 ```powershell
 mvn clean compile     # compile the project

@@ -1,4 +1,4 @@
-﻿# Kafka Streams Skeleton (Spring Boot Template)
+# Kafka Streams Skeleton (Spring Boot Template)
 This repository is a reusable starter template for building Kafka Streams applications with Spring Boot and Java 21.
 It provides a minimal, production-oriented setup with a sample topology, metrics, and externalized configuration
 through Spring Boot properties and environment variables.
@@ -57,10 +57,10 @@ Spring Boot automatically maps environment variables to configuration properties
 - Replacing dots (`.`) with underscores (`_`)
 - Using the result as the environment variable name
 Some common mappings in this project:
-- `spring.kafka.bootstrap-servers` → `SPRING_KAFKA_BOOTSTRAP_SERVERS`
-- `spring.kafka.streams.application-id` → `SPRING_KAFKA_STREAMS_APPLICATION_ID`
-- `app.kafka.input-topic` → `APP_KAFKA_INPUT_TOPIC`
-- `app.kafka.output-topic` → `APP_KAFKA_OUTPUT_TOPIC`
+- `spring.kafka.bootstrap-servers` ? `SPRING_KAFKA_BOOTSTRAP_SERVERS`
+- `spring.kafka.streams.application-id` ? `SPRING_KAFKA_STREAMS_APPLICATION_ID`
+- `app.kafka.input-topic` ? `APP_KAFKA_INPUT_TOPIC`
+- `app.kafka.output-topic` ? `APP_KAFKA_OUTPUT_TOPIC`
 #### Examples (PowerShell on Windows)
 Open a PowerShell in the project directory and set environment variables before starting the app.
 Override Kafka bootstrap servers:
@@ -111,16 +111,6 @@ Environment-variable-based overrides work the same way when using the JAR.
    mvn spring-boot:run
    ```
 4. Produce messages to the input topic and observe transformed messages (uppercased values) on the output topic.
-## Extending this template
-To use this repository as a template for your own Kafka Streams service:
-1. Clone or copy the project.
-2. Change the Maven coordinates (`groupId`, `artifactId`, `version`) in `pom.xml` as needed.
-3. Update the application name and Kafka Streams configuration in `application.yml`.
-4. Create your own topology classes under `io.kcmhub.streams` (or another package) and wire them in `StreamsTopologyConfig`.
-5. Add or adjust configuration properties and override them via environment variables following the pattern described above.
-## License and contributions
-This project is licensed under the Apache License 2.0. See the [`LICENSE`](LICENSE) file for details.
-Contributions are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines on how to propose changes.
 ## Working with Kafka using KCM
 You can use [KCM](https://github.com/kcmhub/KCM) to interact with your Kafka cluster and topics while developing with this template.
 KCM provides a simple CLI to:
@@ -138,3 +128,13 @@ Basic workflow with KCM:
 3. Use KCM commands to:
    - Produce messages to the input topic (for example JSON or plain text)
    - Consume messages from the output topic to verify that your topology processes records as expected
+## Extending this template
+To use this repository as a template for your own Kafka Streams service:
+1. Clone or copy the project.
+2. Change the Maven coordinates (`groupId`, `artifactId`, `version`) in `pom.xml` as needed.
+3. Update the application name and Kafka Streams configuration in `application.yml`.
+4. Create your own topology classes under `io.kcmhub.streams` (or another package) and wire them in `StreamsTopologyConfig`.
+5. Add or adjust configuration properties and override them via environment variables following the pattern described above.
+## License and contributions
+This project is licensed under the Apache License 2.0. See the [`LICENSE`](LICENSE) file for details.
+Contributions are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines on how to propose changes.
