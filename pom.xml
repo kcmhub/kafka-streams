@@ -6,11 +6,37 @@
 
     <groupId>io.kcmhub</groupId>
     <artifactId>kafka-streams-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <name>Kafka Streams Parent</name>
+    <name>KCM Kafka Streams Parent</name>
     <description>Parent project for Kafka Streams template, tooling, and archetype</description>
+    <url>https://kcmhub.io/</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>atoumi</id>
+            <name>Ahmed Toumi</name>
+            <email>ahmed.ettoumi@gmail.com</email>
+            <organization>KCMHub</organization>
+            <organizationUrl>https://kcmhub.io</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/kcmhub/kafka-streams.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:kcmhub/kafka-streams.git</developerConnection>
+        <url>https://github.com/kcmhub/kafka-streams</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <modules>
         <module>kafka-streams-template</module>
@@ -68,5 +94,76 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- Source JAR -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.3.1
+                        </version> <!-- version actuelle stable :contentReference[oaicite:10]{index=10} -->
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Javadoc JAR -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.12.0</version> <!-- dernière version :contentReference[oaicite:11]{index=11} -->
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Signature GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.8</version> <!-- version stable :contentReference[oaicite:12]{index=12} -->
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Plugin de publication Central -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.9.0</version> <!-- doc officielle Central :contentReference[oaicite:13]{index=13} -->
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <!-- Optionnel mais confortable : auto publish + attente -->
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
 

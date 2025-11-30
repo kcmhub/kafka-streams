@@ -44,3 +44,4 @@ docker-compose.override.yml
 # Kafka local data (if running locally)
 /data/
 /logs/
+/pubkey.asc
