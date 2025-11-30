@@ -21,7 +21,7 @@ The `docker-compose.yml` file sets up the following services:
 | Service | Port | Description |
 |---------|------|-------------|
 | **Kafka Broker** | 9092 | Apache Kafka broker (KRaft mode - no Zookeeper) |
-| **KCM UI** | 3000 | Web interface for Kafka management |
+| **KCM UI** | 4000 | Web interface for Kafka management |
 | **KCM API** | 8080 | Backend API for Kafka management |
 | **PostgreSQL** | 5432 | Database for KCM |
 | **Redis** | 6379 | Cache for KCM |
@@ -71,7 +71,7 @@ make start
 Once the stack is running:
 
 - **Kafka Broker**: `localhost:9092` (KRaft mode - no Zookeeper required)
-- **KCM Web UI**: http://localhost:3000
+- **KCM Web UI**: http://localhost:4000
 - **KCM API**: http://localhost:8080
 - **PostgreSQL**: `localhost:5432` (user: `kcm_user`, password: `kcm_password`, database: `kcm`)
 - **Redis**: `localhost:6379`
@@ -93,7 +93,7 @@ Once the stack is running:
 
 ### Getting started with KCM
 1. Start the environment (see Quick Start above)
-2. Open http://localhost:3000 in your browser
+2. Open http://localhost:4000 in your browser
 3. The Kafka cluster connection should be pre-configured
 4. Start creating topics, producing messages, etc.
 

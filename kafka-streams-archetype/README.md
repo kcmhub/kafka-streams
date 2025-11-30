@@ -32,7 +32,7 @@ After installing the archetype, you can generate a new Kafka Streams project:
 mvn archetype:generate \
   -DarchetypeGroupId=io.kcmhub \
   -DarchetypeArtifactId=kafka-streams-archetype \
-  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DarchetypeVersion=1.0.0 \
   -DgroupId=com.example \
   -DartifactId=my-kafka-streams-app \
   -Dversion=1.0-SNAPSHOT \
@@ -45,7 +45,7 @@ mvn archetype:generate \
 mvn archetype:generate `
   -DarchetypeGroupId=io.kcmhub `
   -DarchetypeArtifactId=kafka-streams-archetype `
-  -DarchetypeVersion=1.0-SNAPSHOT `
+  -DarchetypeVersion=1.0.0 `
   -DgroupId=com.example `
   -DartifactId=my-kafka-streams-app `
   -Dversion=1.0-SNAPSHOT `
@@ -71,7 +71,7 @@ You can also use Maven in interactive mode to be prompted for the values:
 mvn archetype:generate \
   -DarchetypeGroupId=io.kcmhub \
   -DarchetypeArtifactId=kafka-streams-archetype \
-  -DarchetypeVersion=1.0-SNAPSHOT
+  -DarchetypeVersion=1.0.0
 ```
 
 Maven will ask you for:

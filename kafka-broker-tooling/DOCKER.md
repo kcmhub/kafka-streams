@@ -99,7 +99,7 @@ curl http://localhost:8080/actuator/health
 ### KCM Web UI
 Open your browser and navigate to:
 ```
-http://localhost:3000
+http://localhost:4000
 ```
 
 The UI provides:
@@ -189,7 +189,7 @@ Edit `.env` to change ports or credentials:
 KAFKA_BROKER_PORT=9092
 POSTGRES_PORT=5432
 POSTGRES_PASSWORD=your_secure_password
-KCM_UI_PORT=3000
+KCM_UI_PORT=4000
 ```
 
 Then restart:
@@ -245,7 +245,7 @@ brokerManager.deleteTopic("my-topic");
 ## 🧪 Testing with KCM
 
 ### Create a test topic via UI
-1. Open http://localhost:3000
+1. Open http://localhost:4000
 2. Navigate to "Topics"
 3. Click "Create Topic"
 4. Enter name: `test-topic`
@@ -269,7 +269,7 @@ brokerManager.deleteTopic("my-topic");
 ```bash
 # Check for port conflicts
 docker compose ps
-netstat -an | grep "9092\|3000\|8080\|5432\|6379"
+netstat -an | grep "9092\|4000\|8080\|5432\|6379"
 
 # View detailed logs
 docker compose logs
@@ -333,7 +333,7 @@ For production deployments, consider:
 ## 🎯 Next Steps
 
 1. Start the environment: `docker compose up -d`
-2. Open KCM UI: http://localhost:3000
+2. Open KCM UI: http://localhost:4000
 3. Create a test topic
 4. Run the `kafka-broker-tooling` application
 5. Use `KafkaBrokerManager` to interact with Kafka programmatically

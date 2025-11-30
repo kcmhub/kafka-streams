@@ -10,7 +10,7 @@ Generate a project with default settings:
 mvn archetype:generate \
   -DarchetypeGroupId=io.kcmhub \
   -DarchetypeArtifactId=kafka-streams-archetype \
-  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DarchetypeVersion=1.0.0 \
   -DgroupId=com.test \
   -DartifactId=test-default \
   -Dversion=1.0-SNAPSHOT \
@@ -28,7 +28,7 @@ Generate a project with a custom topology builder class name:
 mvn archetype:generate \
   -DarchetypeGroupId=io.kcmhub \
   -DarchetypeArtifactId=kafka-streams-archetype \
-  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DarchetypeVersion=1.0.0 \
   -DgroupId=com.test \
   -DartifactId=test-custom \
   -Dversion=1.0-SNAPSHOT \
@@ -45,7 +45,7 @@ mvn archetype:generate \
 mvn archetype:generate \
   -DarchetypeGroupId=io.kcmhub \
   -DarchetypeArtifactId=kafka-streams-archetype \
-  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DarchetypeVersion=1.0.0 \
   -DgroupId=com.example \
   -DartifactId=order-processor \
   -Dversion=1.0.0 \
@@ -115,7 +115,7 @@ Maven should prompt for:
 mvn archetype:generate `
   -DarchetypeGroupId=io.kcmhub `
   -DarchetypeArtifactId=kafka-streams-archetype `
-  -DarchetypeVersion=1.0-SNAPSHOT `
+  -DarchetypeVersion=1.0.0 `
   -DgroupId=com.test `
   -DartifactId=test-default `
   -Dversion=1.0-SNAPSHOT `
@@ -126,7 +126,7 @@ mvn archetype:generate `
 mvn archetype:generate `
   -DarchetypeGroupId=io.kcmhub `
   -DarchetypeArtifactId=kafka-streams-archetype `
-  -DarchetypeVersion=1.0-SNAPSHOT `
+  -DarchetypeVersion=1.0.0 `
   -DgroupId=com.test `
   -DartifactId=test-custom `
   -Dversion=1.0-SNAPSHOT `
