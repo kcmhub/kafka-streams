@@ -25,7 +25,7 @@ function Show-Help {
     Write-Host "  .\docker.ps1 logs-kcm-ui   - View KCM UI logs"
     Write-Host ""
     Write-Host "Quick access:" -ForegroundColor Green
-    Write-Host "  KCM UI:  http://localhost:3000"
+    Write-Host "  KCM UI:  http://localhost:4000"
     Write-Host "  KCM API: http://localhost:8080"
     Write-Host "  Kafka:   localhost:9092"
 }
@@ -38,7 +38,7 @@ function Start-Services {
     Write-Host "Wait 30-60 seconds for initialization" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "Access services:" -ForegroundColor Green
-    Write-Host "  - KCM UI:  http://localhost:3000"
+    Write-Host "  - KCM UI:  http://localhost:4000"
     Write-Host "  - KCM API: http://localhost:8080"
     Write-Host "  - Kafka:   localhost:9092"
 }

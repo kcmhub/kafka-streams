@@ -20,7 +20,7 @@ help:
 	@echo "  make logs-kcm-ui   - View KCM UI logs"
 	@echo ""
 	@echo "Quick access:"
-	@echo "  KCM UI:  http://localhost:3000"
+	@echo "  KCM UI:  http://localhost:4000"
 	@echo "  KCM API: http://localhost:8080"
 	@echo "  Kafka:   localhost:9092"
 
@@ -32,7 +32,7 @@ up:
 	@echo "Wait 30-60 seconds for initialization"
 	@echo ""
 	@echo "Access services:"
-	@echo "  - KCM UI:  http://localhost:3000"
+	@echo "  - KCM UI:  http://localhost:4000"
 	@echo "  - KCM API: http://localhost:8080"
 	@echo "  - Kafka:   localhost:9092"
 

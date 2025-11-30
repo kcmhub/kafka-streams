@@ -40,8 +40,6 @@ services:
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
     volumes:
       - kafka-data:/tmp/kraft-combined-logs
-    networks:
-      - kafka-tooling-network
     healthcheck:
       test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1"]
       interval: 10s
@@ -57,15 +55,13 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: kcm
+      POSTGRES_DB: kcm_db
       POSTGRES_USER: kcm_user
       POSTGRES_PASSWORD: kcm_password
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    networks:
-      - kafka-tooling-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kcm_user -d kcm"]
+      test: ["CMD-SHELL", "pg_isready -U kcm_user -d kcm_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -73,15 +69,12 @@ services:
   # Redis - Cache for KCM
   redis:
     image: redis:7-alpine
-    hostname: redis
-    container_name: kafka-tooling-redis
+    container_name: kcm-redis
     ports:
       - "6379:6379"
     command: redis-server --appendonly yes
     volumes:
       - redis-data:/data
-    networks:
-      - kafka-tooling-network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -90,59 +83,80 @@ services:
 
   # KCM API - Backend
   kcm-api:
-    image: kcmhub/kcm-api:latest
-    hostname: kcm-api
-    container_name: kafka-tooling-kcm-api
+    image: kafkaetech/kcm-api:1.0.3
+    pull_policy: always
+    restart: unless-stopped
+    container_name: kcm-api
     depends_on:
-      - kafka
       - postgres
       - redis
     ports:
       - "8080:8080"
     environment:
-      # Kafka Configuration
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      KCM_APP_PORT: "8080"
+      KCM_REDIRECT_ALLOWLIST: "http://localhost:4000"
+      KCM_DEFAULT_REDIRECT: "http://localhost:4000"
+      # Security: Default user
+      KCM_DEFAULT_USER_ENABLED: "true"
+      KCM_DEFAULT_PASSWORD: "admin"
 
-      # Database Configuration
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/kcm
-      SPRING_DATASOURCE_USERNAME: kcm_user
-      SPRING_DATASOURCE_PASSWORD: kcm_password
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # License
+      KCM_LICENSE_PATH: "/app/license/license.json"
+      KCM_LICENSE_KAFKA_TOPIC: "__kcm_license"
+      KCM_LICENSE_CRL_PATH: "/app/license/kcm.crl"
+      KCM_LICENSE_SIGNATURE_PATH: "/app/license/license.sig"
+      KCM_LICENSE_HISTORY_DIR: "/app/license/license-history"
 
-      # Redis Configuration
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
+      # Encryption keys
+      KCM_ENCRYPT_PRIVATE_KEY: "/app/keys/private.pem"
+      KCM_ENCRYPT_PUBLIC_KEY: "/app/keys/public.pem"
 
-      # API Configuration
-      SERVER_PORT: 8080
-      LOGGING_LEVEL_IO_KCMHUB: DEBUG
-    networks:
-      - kafka-tooling-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+      # JWT
+      KCM_JWT_PERSISTENCE_MODE: "JDBC"
+      KCM_JWT_TOKEN_VALIDITY: "86400"
+      KCM_JWT_PRIVATE_KEY: "/app/keys/private.pem"
+      KCM_JWT_PUBLIC_KEY: "/app/keys/public.pem"
 
-  # KCM UI - Frontend
+      # App file storage
+      KCM_APP_FILES_PATH: "/app/files"
+
+      # PostgreSQL
+      KCM_DB_URL: "jdbc:postgresql://postgres:5432/kcm_db"
+      KCM_DB_USER: "kcm_user"
+      KCM_DB_PWD: "kcm_password"
+
+      # Kafka
+      KCM_ADMIN_CLIENT_ID: "kc-admin-client"
+
+      # Redis
+      KCM_REDIS_HOST: "redis"
+      KCM_REDIS_PORT: "6379"
+      KCM_REDIS_DB: "0"
+      KCM_REDIS_TIMEOUT: "2000"
+
+    volumes:
+      - ./data/keys:/app/keys
+      - ./data/files:/app/files
+      - kcm-app:/app
+      - kcm-evaluation:/tmp/evaluation
+
   kcm-ui:
-    image: kcmhub/kcm-ui:latest
-    hostname: kcm-ui
-    container_name: kafka-tooling-kcm-ui
+    image: kafkaetech/kcm-ui:1.0.3
+    pull_policy: always
+    restart: unless-stopped
+    container_name: kcm-ui
     depends_on:
       - kcm-api
     ports:
-      - "3000:80"
-    environment:
-      REACT_APP_API_URL: http://localhost:8080
-      REACT_APP_API_BASE_PATH: /api
-    networks:
-      - kafka-tooling-network
+      - "4000:4000"
+    volumes:
+      - ./runtime-config.json:/usr/share/nginx/html/runtime-config.json:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
 networks:
-  kafka-tooling-network:
-    driver: bridge
+  default:
+    external:
+      name: kcm-net
 
 volumes:
   kafka-data:
@@ -151,4 +165,6 @@ volumes:
     driver: local
   redis-data:
     driver: local
+  kcm-app:
+  kcm-evaluation:
 
