@@ -39,7 +39,7 @@ services:
       # Log configuration
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
     volumes:
-      - kafka-data:/tmp/kraft-combined-logs
+      - kafka-data:/data/kraft-combined-logs
     healthcheck:
       test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1"]
       interval: 10s
